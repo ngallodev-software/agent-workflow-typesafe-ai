@@ -39,3 +39,13 @@ or `evaluate-skill`. Live calls require both the optional extra and the normal
 runtime environment key. The distribution and entry-point names remain stable
 for host compatibility even though the public repository is named
 `agent-workflow-typesafe-ai`.
+
+## Comparative evaluation
+
+The plugin also ships an opt-in, secret-free comparative-evaluation layer. It records
+control and TypeSafe candidate observations, keeps control authoritative, supports
+deterministic repeated static cases, and exposes bounded timing/usage metadata for
+shadow capture. Frozen corpora and versioned observation/outcome/report contracts are
+documented in [docs/comparative-evaluation](docs/comparative-evaluation/README.md).
+Live calls remain opt-in; evaluation helpers do not persist raw task text, API keys,
+or host lifecycle state.

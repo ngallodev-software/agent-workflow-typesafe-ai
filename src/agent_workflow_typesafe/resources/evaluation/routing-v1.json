@@ -1,0 +1,10 @@
+{
+  "dataset_version": "routing-v1.0.0",
+  "feature_id": "routing-advice/v1",
+  "cases": [
+    {"case_id": "route-implementation", "task": "Implement the parser change", "oracle": {"task_class": "implementation"}},
+    {"case_id": "route-review", "task": "Review the proposed parser change", "oracle": {"task_class": "review"}},
+    {"case_id": "route-interaction", "task": "Choose which production database to migrate", "oracle": {"interaction_needed": true}},
+    {"case_id": "route-other", "task": "A bounded task with no listed class", "oracle": {"task_class": "other"}}
+  ]
+}

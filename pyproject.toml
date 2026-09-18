@@ -26,7 +26,7 @@ package-dir = {"" = "src"}
 where = ["src"]
 
 [tool.setuptools.package-data]
-agent_workflow_typesafe = ["resources/*.json"]
+agent_workflow_typesafe = ["resources/*.json", "resources/evaluation/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
