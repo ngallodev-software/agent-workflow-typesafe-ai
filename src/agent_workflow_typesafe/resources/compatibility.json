@@ -1,7 +1,7 @@
 {
   "schema": "agent-workflow-typesafe/compatibility/v1",
   "plugin_version": "0.1.0",
-  "agent_workflow": {"verified_products": ["0.10.0"], "plugin_api": 1},
+  "agent_workflow": {"verified_products": ["0.10.0", "0.10.1"], "plugin_api": 1},
   "python": ">=3.11",
   "typesafe_sdk": "==0.6.0",
   "receipt_schema": "semantic-advice/v1alpha1",

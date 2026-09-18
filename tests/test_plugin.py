@@ -43,6 +43,10 @@ def test_unverified_and_no_sdk_are_distinguishable() -> None:
     assert result["policy_outcome"] == "no_action"
 
 
+def test_qualified_host_product_is_accepted() -> None:
+    assert advise_routing({"task": "review", "source_refs": ["T-2"]}, "0.10.1")["status"] in {"sdk_or_key_unavailable", "service_failure"}
+
+
 def test_hash_ignores_field_order_and_projection_redacts() -> None:
     state_a, _ = project_routing({"task": "x", "metadata": {"z": 1, "api_key": "hide"}})
     state_b, _ = project_routing({"metadata": {"api_key": "hide", "z": 1}, "task": "x"})
