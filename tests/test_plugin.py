@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from types import SimpleNamespace
+from pathlib import Path
 
 from agent_workflow_typesafe.compatibility import compatibility
 from agent_workflow_typesafe.plugin import execute, plugin
@@ -83,3 +84,8 @@ def test_doctor_reports_key_as_boolean(monkeypatch) -> None:
     assert result["api_key_configured"] is True
     assert "secret" not in json.dumps(result)
     assert compatibility()["typesafe_sdk"] == "==0.6.0"
+
+
+def test_published_compatibility_matches_installed_resource() -> None:
+    root = Path(__file__).parents[1]
+    assert json.loads((root / "compat/compatibility.json").read_text()) == compatibility()
