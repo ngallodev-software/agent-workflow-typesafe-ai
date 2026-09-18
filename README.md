@@ -1,9 +1,26 @@
-# Agent-Workflow TypeSafe
+# Agent-Workflow TypeSafe AI
 
-`agent-workflow-typesafe` is an external Agent-Workflow plugin that produces
-bounded TypeSafe semantic evidence. It is intentionally advisory: it never
-changes Agent-Workflow routing, model policy, lifecycle, evaluation, review,
-or acceptance.
+`agent-workflow-typesafe` is an external Agent-Workflow plugin that makes
+optional [TypeSafe AI](https://typesafe.ai/) API calls through its Jev/System
+One typed-decision API. It augments bounded decisions with Choice, Noul, and
+Score evidence while Agent-Workflow retains deterministic authority.
+
+## What it does
+
+- Projects bounded, redacted task or skill evidence into TypeSafe AI questions.
+- Calls the optional TypeSafe AI/Jev API and normalizes typed answers into
+  versioned, secret-free semantic receipts.
+- Provides advisory routing metadata: task class, interaction need, and
+  semantic consequence/risk.
+- Evaluates whether a skill directs a required behavior, plus independent
+  completeness and actionability evidence.
+- Reports compatibility and credential-free diagnostics through
+  `agent-workflow typesafe compatibility` and `doctor`.
+
+All outputs are advisory `no_action` evidence. The plugin never changes
+Agent-Workflow routing, executor or model policy, lifecycle, evaluation,
+review, or acceptance. Missing credentials, an unavailable SDK, uncertain
+answers, and service failures return distinct no-action outcomes.
 
 Install the base package for discovery, compatibility checks, receipts, and
 offline tests. Install `agent-workflow-typesafe[typesafe]` only to make live
@@ -19,5 +36,6 @@ enabled = ["agent-workflow-typesafe"]
 
 Then use `agent-workflow typesafe compatibility`, `doctor`, `advise-routing`,
 or `evaluate-skill`. Live calls require both the optional extra and the normal
-runtime environment key. All outcomes remain `no_action` advisory evidence.
-
+runtime environment key. The distribution and entry-point names remain stable
+for host compatibility even though the public repository is named
+`agent-workflow-typesafe-ai`.
