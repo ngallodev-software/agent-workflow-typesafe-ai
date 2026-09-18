@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Advisory TypeSafe semantic evidence plugin for Agent-Workflow"
 readme = "README.md"
 requires-python = ">=3.11"
-license = "MIT"
+license = "Apache-2.0"
 authors = [{name = "ngallodev-software"}]
 classifiers = ["Programming Language :: Python :: 3 :: Only"]
 
@@ -30,4 +30,3 @@ agent_workflow_typesafe = ["resources/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-
