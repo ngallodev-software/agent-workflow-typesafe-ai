@@ -95,3 +95,23 @@ def test_doctor_reports_key_as_boolean(monkeypatch) -> None:
 def test_published_compatibility_matches_installed_resource() -> None:
     root = Path(__file__).parents[1]
     assert json.loads((root / "compat/compatibility.json").read_text()) == compatibility()
+
+
+def test_plugin_advertises_dynamic_decision_modes_and_provider() -> None:
+    descriptor = plugin()
+    assert {mode.name: mode.disposition for mode in descriptor.decision_modes} == {
+        "typesafe": "automated",
+        "comparative": "shadow",
+    }
+    assert len(descriptor.decision_providers) == 1
+    provider = descriptor.decision_providers[0]
+    assert provider.name == "typesafe"
+    assert "routing.task_class" in provider.decisions
+    assert "skill.behavior_satisfied" in provider.decisions
+
+
+def test_comparative_mode_requests_host_comparison_capture() -> None:
+    from agent_workflow_typesafe.plugin import plugin
+    modes={item.name:item for item in plugin().decision_modes}
+    assert modes["comparative"].capture_comparison is True
+    assert modes["typesafe"].capture_comparison is False

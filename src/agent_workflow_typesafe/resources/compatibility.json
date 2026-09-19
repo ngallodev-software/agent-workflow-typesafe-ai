@@ -14,7 +14,23 @@
     "mode": "optional-extra",
     "specifier": "==0.1.0"
   },
-  "plugin_version": "0.1.1",
+  "decision_integration": {
+    "decisions": [
+      "routing.task_class",
+      "routing.interaction_required",
+      "routing.semantic_risk",
+      "skill.behavior_satisfied",
+      "skill.completeness",
+      "skill.actionability"
+    ],
+    "modes": {
+      "comparative": "shadow",
+      "typesafe": "automated"
+    },
+    "policy_owner": "agent-workflow",
+    "provider": "typesafe"
+  },
+  "plugin_version": "0.1.2",
   "python": ">=3.11",
   "question_sets": {
     "routing": "routing/v1alpha1",

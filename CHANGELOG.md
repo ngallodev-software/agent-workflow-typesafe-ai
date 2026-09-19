@@ -1,3 +1,8 @@
+# 0.1.2
+
+- Advertise TypeSafe semantic decision provider and dynamic `typesafe` / `comparative` modes through the Agent-Workflow plugin API.
+- Keep thresholds, fallback, application authority, and final route composition in Agent-Workflow.
+
 # Changelog
 
 ## 0.1.1

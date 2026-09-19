@@ -56,3 +56,12 @@ base plugin installs do not acquire a new required dependency. Existing
 integrations should use the neutral shared-library schema namespace.
 
 See [docs/comparative-evaluation/README.md](docs/comparative-evaluation/README.md).
+
+## Agent-Workflow decision modes
+
+On an Agent-Workflow host that supports dynamic decision providers, this plugin advertises two modes:
+
+- `typesafe` — TypeSafe semantic evidence is eligible for bounded Agent-Workflow policy consumption on approved decision seams;
+- `comparative` — the same TypeSafe evidence is evaluated in shadow mode while deterministic control remains authoritative.
+
+The plugin does not own thresholds, fallback, routing authority, lifecycle, review, or acceptance. Those remain Agent-Workflow policy. Use `agent-workflow decision modes` to inspect the modes actually available from enabled plugins.
