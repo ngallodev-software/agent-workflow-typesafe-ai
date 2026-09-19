@@ -115,3 +115,44 @@ def test_comparative_mode_requests_host_comparison_capture() -> None:
     modes={item.name:item for item in plugin().decision_modes}
     assert modes["comparative"].capture_comparison is True
     assert modes["typesafe"].capture_comparison is False
+
+
+def test_typesafe_call_log_is_opt_in_and_records_bounded_redacted_io(tmp_path, monkeypatch) -> None:
+    log_path = tmp_path / "nested" / "calls.jsonl"
+    monkeypatch.setenv("TYPESAFE_API_CALL_LOG", str(log_path))
+    result = advise_routing({
+        "task": "repair service",
+        "metadata": {"api_key": "do-not-write", "note": "kept"},
+        "source_refs": ["T-5"],
+    }, "0.10.2", client=FakeClient())
+    assert result["status"] == "advisory"
+    lines = log_path.read_text().splitlines()
+    assert len(lines) == 1
+    entry = json.loads(lines[0])
+    assert entry["schema"].endswith("/v1")
+    assert entry["input"]["state"]["task"] == "repair service"
+    assert entry["input"]["state"]["declared_metadata"]["api_key"] == "[redacted]"
+    assert entry["output"]["task_class"]["choice"] == "implementation"
+    assert "do-not-write" not in lines[0]
+
+
+def test_typesafe_call_log_records_failure_without_error_text(tmp_path, monkeypatch) -> None:
+    log_path = tmp_path / "calls.jsonl"
+    monkeypatch.setenv("TYPESAFE_API_CALL_LOG", str(log_path))
+
+    class BrokenClient:
+        def system_one(self, state, questions, model=None):
+            raise OSError("secret api key should not be logged")
+
+    result = advise_routing({"task": "review", "source_refs": ["T-6"]}, "0.10.2", client=BrokenClient())
+    assert result["status"] == "service_failure"
+    entry = json.loads(log_path.read_text())
+    assert entry["status"] == "service_failure"
+    assert entry["error_class"] == "OSError"
+    assert "secret api key" not in log_path.read_text()
+
+
+def test_typesafe_call_log_io_failure_does_not_change_result(monkeypatch) -> None:
+    monkeypatch.setenv("TYPESAFE_API_CALL_LOG", "/dev/null/impossible/calls.jsonl")
+    result = advise_routing({"task": "review", "source_refs": ["T-7"]}, "0.10.2", client=FakeClient())
+    assert result["status"] == "advisory"

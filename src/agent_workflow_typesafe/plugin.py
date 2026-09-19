@@ -50,7 +50,8 @@ def execute(args: argparse.Namespace, context: Any) -> dict[str, Any]:
         import os
         return {"plugin": "agent-workflow-typesafe", "host_version": context.host_version, "host_verified": host_is_verified(context.host_version), "typesafe_sdk_installed": importlib.util.find_spec("typesafe_sdk") is not None, "api_key_configured": bool(os.environ.get("TYPESAFE_API_KEY")), "semantic_execution": "available" if host_is_verified(context.host_version) else "refused_unverified_host", "comparative_evaluation": shared_library_status()}
     source = _json_input(args.input)
-    result = advise_routing(source, context.host_version, model=args.model) if args.typesafe_command == "advise-routing" else evaluate_skill(source, context.host_version, model=args.model)
+    log_path = str(context.settings.typesafe_api_call_log) if context.settings.typesafe_api_call_log else None
+    result = advise_routing(source, context.host_version, model=args.model, log_path=log_path) if args.typesafe_command == "advise-routing" else evaluate_skill(source, context.host_version, model=args.model, log_path=log_path)
     validate_receipt(result)
     return result
 
@@ -81,10 +82,12 @@ def _decision_status(receipt: dict[str, Any]) -> str:
 def _decision_provider(request: PluginDecisionRequest, context: PluginDecisionContext) -> dict[str, PluginDecisionEvidence]:
     decision_ids = set(request.decision_ids)
     if decision_ids <= set(_ROUTING_IDS):
-        receipt = advise_routing(request.state, context.host_version)
+        log_path = str(context.settings.typesafe_api_call_log) if context.settings.typesafe_api_call_log else None
+        receipt = advise_routing(request.state, context.host_version, log_path=log_path)
         mapping = _ROUTING_IDS
     elif decision_ids <= set(_SKILL_IDS):
-        receipt = evaluate_skill(request.state, context.host_version)
+        log_path = str(context.settings.typesafe_api_call_log) if context.settings.typesafe_api_call_log else None
+        receipt = evaluate_skill(request.state, context.host_version, log_path=log_path)
         mapping = _SKILL_IDS
     else:
         raise ValueError("TypeSafe decision requests may not mix routing and skill question sets")

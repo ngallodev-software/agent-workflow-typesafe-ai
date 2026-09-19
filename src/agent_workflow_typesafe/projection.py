@@ -20,7 +20,8 @@ def request_hash(state: Mapping[str, object], questions: Mapping[str, object], v
 
 
 def _safe(value: Any, *, key: str = "") -> Any:
-    if key.lower().replace("-", "_") in _SECRET_KEYS:
+    normalized_key = key.lower().replace("-", "_")
+    if normalized_key in _SECRET_KEYS or any(marker in normalized_key for marker in ("api_key", "apikey", "authorization", "password", "secret", "token")):
         return "[redacted]"
     if isinstance(value, str):
         return value[:_MAX_TEXT]
@@ -49,4 +50,3 @@ def project_skill(source: Mapping[str, object]) -> tuple[dict[str, object], list
     if not isinstance(refs, list) or not all(isinstance(item, str) for item in refs):
         raise ValueError("source_refs must be a list of stable strings")
     return {name: _safe(source[name]) for name in required}, list(refs)
-

@@ -41,6 +41,15 @@ runtime environment key. The distribution and entry-point names remain stable
 for host compatibility even though the public repository is named
 `agent-workflow-typesafe-ai`.
 
+## TypeSafe API call logging
+
+API call logging is disabled by default. To opt in, set `TYPESAFE_API_CALL_LOG`
+to a JSONL file path. Each attempted TypeSafe call records the bounded projected
+input, question set, normalized output (or exception class), request hash, model,
+status, and duration. Secrets and authorization-like fields are redacted, and
+logger I/O failures never affect the advisory result. Treat the file as sensitive
+because projected task and skill text may be retained.
+
 ## Comparative evaluation
 
 Comparative evaluation is now split across a dependency-neutral shared library and
