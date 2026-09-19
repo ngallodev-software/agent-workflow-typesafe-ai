@@ -1,65 +1,133 @@
-"""Secret-free comparative evaluation helpers.
+"""Compatibility facade for comparative evaluation.
 
-These helpers record control/candidate evidence without changing plugin policy.
-The candidate is never applied to Agent-Workflow authority; callers own the
-control result and may use this module only for static or shadow observations.
+The canonical implementation is the optional ``agent-workflow-comparative-eval``
+shared library.  The base plugin remains lightweight: when that optional package
+is absent this module falls back to the frozen 0.1.0 implementation so existing
+``agent_workflow_typesafe.evaluation`` imports keep working during the 0.1.x
+migration window.
+
+New integrations should install ``agent-workflow-typesafe[eval]`` and consume
+neutral shared-library artifacts.  Legacy TypeSafe schema IDs are retained here
+only as a compatibility surface.
 """
 
 from __future__ import annotations
 
-import hashlib
-import json
-import time
-import uuid
+import importlib
 from collections.abc import Callable, Mapping, Sequence
-from datetime import datetime, timezone
 from typing import Any
 
-from importlib.resources import files
+from . import _legacy_evaluation as _legacy
 
-OBSERVATION_SCHEMA = "agent-workflow-typesafe/comparison-observation/v1"
-
-
-def load_corpus(name: str) -> list[dict[str, Any]]:
-    """Load a shipped, frozen synthetic corpus by name."""
-    if name not in {"routing-v1", "skill-behavior-v1"}:
-        raise ValueError("unknown evaluation corpus")
-    value = json.loads(files("agent_workflow_typesafe").joinpath("resources", "evaluation", f"{name}.json").read_text())
-    cases = value.get("cases")
-    if not isinstance(cases, list) or not all(isinstance(case, dict) for case in cases):
-        raise ValueError("evaluation corpus is invalid")
-    return [dict(case, dataset_version=value["dataset_version"]) for case in cases]
+SHARED_LIBRARY_DISTRIBUTION = "agent-workflow-comparative-eval"
+SHARED_LIBRARY_IMPORT = "agent_workflow_comparative_eval"
+SHARED_LIBRARY_SPECIFIER = "==0.1.0"
+SHARED_LIBRARY_VERSION = "0.1.0"
+LEGACY_OBSERVATION_SCHEMA = "agent-workflow-typesafe/comparison-observation/v1"
+CANONICAL_OBSERVATION_SCHEMA = "agent-workflow-comparative-eval/comparison-observation/v1"
+OBSERVATION_SCHEMA = LEGACY_OBSERVATION_SCHEMA
 
 
-def _canonical(value: object) -> str:
-    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+def _shared_module() -> Any | None:
+    try:
+        module = importlib.import_module(SHARED_LIBRARY_IMPORT)
+    except ImportError as exc:
+        # Only suppress absence of the optional top-level package. Import
+        # failures inside an installed shared library are real installation
+        # errors and must remain visible.
+        if exc.name == SHARED_LIBRARY_IMPORT:
+            return None
+        raise
+    version = _shared_version(module)
+    if version != SHARED_LIBRARY_VERSION:
+        raise RuntimeError(
+            f"unsupported {SHARED_LIBRARY_DISTRIBUTION} version {version!r}; "
+            f"expected {SHARED_LIBRARY_VERSION}"
+        )
+    return module
+
+
+def _shared_version(module: Any | None = None) -> str | None:
+    module = module if module is not None else _shared_module()
+    if module is None:
+        return None
+    value = getattr(module, "__version__", None)
+    return value if isinstance(value, str) and value else None
+
+
+def shared_library_status() -> dict[str, Any]:
+    try:
+        module = _shared_module()
+        version = _shared_version(module)
+        return {
+            "distribution": SHARED_LIBRARY_DISTRIBUTION,
+            "import_package": SHARED_LIBRARY_IMPORT,
+            "specifier": SHARED_LIBRARY_SPECIFIER,
+            "installed": module is not None,
+            "compatible": module is not None,
+            "version": version,
+            "backend": "shared" if module is not None else "legacy-compatibility",
+            "error_class": None,
+        }
+    except Exception as exc:
+        return {
+            "distribution": SHARED_LIBRARY_DISTRIBUTION,
+            "import_package": SHARED_LIBRARY_IMPORT,
+            "specifier": SHARED_LIBRARY_SPECIFIER,
+            "installed": True,
+            "compatible": False,
+            "version": None,
+            "backend": "unavailable",
+            "error_class": type(exc).__name__,
+        }
+
+
+def _call_shared(name: str, *args: Any, **kwargs: Any) -> Any:
+    module = _shared_module()
+    if module is None:
+        raise RuntimeError(
+            "comparative evaluation shared library unavailable; install "
+            "agent-workflow-typesafe[eval]"
+        )
+    fn = getattr(module, name, None)
+    if not callable(fn):
+        raise RuntimeError(f"shared comparative-eval library has no callable {name}")
+    return fn(*args, **kwargs)
+
+
+def _mapping(value: Any) -> dict[str, Any]:
+    if isinstance(value, Mapping):
+        return dict(value)
+    to_dict = getattr(value, "to_dict", None)
+    if callable(to_dict):
+        converted = to_dict()
+        if isinstance(converted, Mapping):
+            return dict(converted)
+    raise TypeError("shared comparative-eval result is not a mapping")
+
+
+def _legacy_schema(value: Any) -> dict[str, Any]:
+    result = _mapping(value)
+    if result.get("schema") == CANONICAL_OBSERVATION_SCHEMA:
+        result["schema"] = LEGACY_OBSERVATION_SCHEMA
+    return result
 
 
 def sha256(value: object) -> str:
-    return hashlib.sha256(_canonical(value).encode("utf-8")).hexdigest()
+    module = _shared_module()
+    if module is not None and callable(getattr(module, "sha256", None)):
+        return str(module.sha256(value))
+    return _legacy.sha256(value)
 
 
-def _arm(call: Callable[[], Mapping[str, Any]] | None) -> dict[str, Any]:
-    if call is None:
-        return {"status": "not_applicable", "duration_seconds": None, "result": None, "usage": {}}
-    started = time.perf_counter()
-    try:
-        result = dict(call())
-    except TimeoutError:
-        return {"status": "timeout", "duration_seconds": time.perf_counter() - started, "result": None, "usage": {}}
-    except Exception as exc:  # deliberately classify, never serialize exception text
-        return {"status": "error", "duration_seconds": time.perf_counter() - started, "result": None, "usage": {}, "error_class": type(exc).__name__}
-    duration = time.perf_counter() - started
-    arm = {"status": "success", "duration_seconds": duration, "result": result, "usage": {}}
-    for key in ("provider_elapsed_seconds", "first_output_latency_seconds", "usage"):
-        if key in result and key != "usage":
-            value = result[key]
-            if isinstance(value, (int, float)) and value >= 0:
-                arm[key] = float(value)
-        elif key == "usage" and isinstance(result.get(key), Mapping):
-            # Usage is accepted only as already-normalized numeric/null fields.
-            arm[key] = {str(name): value for name, value in result[key].items() if value is None or isinstance(value, (int, float))}
-    return arm
+def load_corpus(name: str) -> list[dict[str, Any]]:
+    module = _shared_module()
+    if module is not None and callable(getattr(module, "load_corpus", None)):
+        cases = module.load_corpus(name)
+        if not isinstance(cases, Sequence) or isinstance(cases, (str, bytes)):
+            raise TypeError("shared evaluation corpus is not a sequence")
+        return [_mapping(case) for case in cases]
+    return _legacy.load_corpus(name)
 
 
 def observation(
@@ -75,38 +143,65 @@ def observation(
     data_class: str = "synthetic",
     observation_id: str | None = None,
 ) -> dict[str, Any]:
-    control_arm = _arm(control)
-    candidate_arm = _arm(candidate)
-    control_result = control_arm.get("result")
-    candidate_result = candidate_arm.get("result")
-    agreement = None if control_result is None or candidate_result is None else control_result == candidate_result
-    return {
-        "schema": OBSERVATION_SCHEMA,
-        "observation_id": observation_id or str(uuid.uuid4()),
-        "feature_id": feature_id,
-        "mode": mode,
-        "recorded_at": datetime.now(timezone.utc).isoformat(),
-        "identity": dict(identity),
-        "input": {"case_id": case_id, "input_sha256": sha256(source_input), "projection_sha256": sha256(projected_input), "raw_input_persisted": False},
-        "control": control_arm,
-        "candidate": candidate_arm,
-        "comparison": {"candidate_applied": False, "authoritative_arm": "control", "agreement": agreement, "normalized_control": control_result, "normalized_candidate": candidate_result},
-        "privacy": {"data_class": data_class, "raw_content_stored": False, "secret_values_stored": False},
-    }
+    """Return the legacy 0.1.x observation shape for compatibility.
+
+    When the shared library is installed, generic execution is delegated there
+    and the neutral schema ID is translated back to the historical TypeSafe ID
+    for this compatibility API only.
+    """
+    module = _shared_module()
+    if module is None or not callable(getattr(module, "observation", None)):
+        return _legacy.observation(
+            feature_id=feature_id,
+            mode=mode,
+            identity=identity,
+            source_input=source_input,
+            projected_input=projected_input,
+            control=control,
+            candidate=candidate,
+            case_id=case_id,
+            data_class=data_class,
+            observation_id=observation_id,
+        )
+    return _legacy_schema(
+        module.observation(
+            feature_id=feature_id,
+            mode=mode,
+            identity=identity,
+            source_input=source_input,
+            projected_input=projected_input,
+            control=control,
+            candidate=candidate,
+            case_id=case_id,
+            data_class=data_class,
+            observation_id=observation_id,
+        )
+    )
+
+
+def neutral_observation(**kwargs: Any) -> dict[str, Any]:
+    """Create the canonical neutral observation; requires the ``eval`` extra."""
+    result = _mapping(_call_shared("observation", **kwargs))
+    if result.get("schema") == LEGACY_OBSERVATION_SCHEMA:
+        result["schema"] = CANONICAL_OBSERVATION_SCHEMA
+    return result
 
 
 def validate_observation(value: Mapping[str, Any]) -> None:
-    required = {"schema", "observation_id", "feature_id", "mode", "recorded_at", "identity", "input", "control", "candidate", "comparison", "privacy"}
-    if set(value) != required or value.get("schema") != OBSERVATION_SCHEMA:
-        raise ValueError("invalid comparison observation fields")
-    if value["comparison"].get("candidate_applied") is not False or value["comparison"].get("authoritative_arm") != "control":
-        raise ValueError("candidate must remain unapplied and control-authoritative")
-    if value["input"].get("raw_input_persisted") is not False or value["privacy"].get("raw_content_stored") is not False or value["privacy"].get("secret_values_stored") is not False:
-        raise ValueError("observation privacy boundary is invalid")
-    for name in ("input_sha256", "projection_sha256"):
-        digest = value["input"].get(name)
-        if not isinstance(digest, str) or len(digest) != 64 or any(char not in "0123456789abcdef" for char in digest):
-            raise ValueError("observation input digest is invalid")
+    schema = value.get("schema")
+    module = _shared_module()
+    if schema == CANONICAL_OBSERVATION_SCHEMA:
+        if module is None:
+            raise RuntimeError(
+                "canonical comparative-eval observations require "
+                "agent-workflow-typesafe[eval]"
+            )
+        _call_shared("validate_observation", value)
+        return
+    if schema != LEGACY_OBSERVATION_SCHEMA:
+        raise ValueError("unknown comparison observation schema")
+    # Preserve exact 0.1.0 validation semantics for the compatibility shape.
+    _legacy.validate_observation(value)
 
 
 def run_static_cases(
@@ -117,12 +212,46 @@ def run_static_cases(
     candidate: Callable[[Mapping[str, Any]], Mapping[str, Any]],
     repetitions: int = 1,
 ) -> list[dict[str, Any]]:
-    if repetitions < 1:
-        raise ValueError("repetitions must be positive")
-    observations: list[dict[str, Any]] = []
-    for case in cases:
-        case_id = case.get("case_id")
-        for repetition in range(repetitions):
-            identity = {"dataset_version": case.get("dataset_version", "unknown"), "repetition": repetition}
-            observations.append(observation(feature_id=feature_id, mode="static", identity=identity, source_input=case, projected_input=case, case_id=case_id if isinstance(case_id, str) else None, control=lambda case=case: control(case), candidate=lambda case=case: candidate(case)))
-    return observations
+    module = _shared_module()
+    if module is None or not callable(getattr(module, "run_static_cases", None)):
+        return _legacy.run_static_cases(
+            cases,
+            feature_id=feature_id,
+            control=control,
+            candidate=candidate,
+            repetitions=repetitions,
+        )
+    values = module.run_static_cases(
+        cases,
+        feature_id=feature_id,
+        control=control,
+        candidate=candidate,
+        repetitions=repetitions,
+    )
+    return [_legacy_schema(value) for value in values]
+
+
+def neutral_run_static_cases(
+    cases: Sequence[Mapping[str, Any]],
+    *,
+    feature_id: str,
+    control: Callable[[Mapping[str, Any]], Mapping[str, Any]],
+    candidate: Callable[[Mapping[str, Any]], Mapping[str, Any]],
+    repetitions: int = 1,
+) -> list[dict[str, Any]]:
+    """Run the canonical shared-library static path; requires the eval extra."""
+    values = _call_shared(
+        "run_static_cases",
+        cases,
+        feature_id=feature_id,
+        control=control,
+        candidate=candidate,
+        repetitions=repetitions,
+    )
+    result: list[dict[str, Any]] = []
+    for value in values:
+        item = _mapping(value)
+        if item.get("schema") == LEGACY_OBSERVATION_SCHEMA:
+            item["schema"] = CANONICAL_OBSERVATION_SCHEMA
+        result.append(item)
+    return result

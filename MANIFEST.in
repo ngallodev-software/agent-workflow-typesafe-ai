@@ -1,0 +1,4 @@
+include LICENSE README.md COMPARATIVE_EVAL_ADOPTION.json CHANGELOG.md
+recursive-include compat *.json
+recursive-include docs *.md
+recursive-include src/agent_workflow_typesafe/resources *.json

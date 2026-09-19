@@ -13,6 +13,7 @@ from agent_workflow.plugin_api import PluginCommand, PluginDescriptor, PluginPac
 
 from . import __version__
 from .compatibility import compatibility, host_is_verified
+from .evaluation import shared_library_status
 from .receipts import validate_receipt
 from .service import advise_routing, evaluate_skill
 
@@ -44,7 +45,7 @@ def execute(args: argparse.Namespace, context: Any) -> dict[str, Any]:
     if args.typesafe_command == "doctor":
         import importlib.util
         import os
-        return {"plugin": "agent-workflow-typesafe", "host_version": context.host_version, "host_verified": host_is_verified(context.host_version), "typesafe_sdk_installed": importlib.util.find_spec("typesafe_sdk") is not None, "api_key_configured": bool(os.environ.get("TYPESAFE_API_KEY")), "semantic_execution": "available" if host_is_verified(context.host_version) else "refused_unverified_host"}
+        return {"plugin": "agent-workflow-typesafe", "host_version": context.host_version, "host_verified": host_is_verified(context.host_version), "typesafe_sdk_installed": importlib.util.find_spec("typesafe_sdk") is not None, "api_key_configured": bool(os.environ.get("TYPESAFE_API_KEY")), "semantic_execution": "available" if host_is_verified(context.host_version) else "refused_unverified_host", "comparative_evaluation": shared_library_status()}
     source = _json_input(args.input)
     result = advise_routing(source, context.host_version, model=args.model) if args.typesafe_command == "advise-routing" else evaluate_skill(source, context.host_version, model=args.model)
     validate_receipt(result)
@@ -59,7 +60,7 @@ def plugin() -> PluginDescriptor:
         resources=("agent-workflow-typesafe://compatibility/v1", "agent-workflow-typesafe://semantic-advice/v1alpha1"),
         package_resources=(
             PluginPackageResource("schema", "agent-workflow-typesafe/semantic-advice/v1alpha1", "agent_workflow_typesafe", "resources/semantic-advice-v1alpha1.schema.json", "d5552fab3f2cf759fe9dab5f4079d5a048600cff67ff5ca6399b1e45c6ef48b2"),
-            PluginPackageResource("asset", "agent-workflow-typesafe/compatibility/v1", "agent_workflow_typesafe", "resources/compatibility.json", "ecaad5ea7f293ad689f61083a53807080a2ac5c8b00761ebe2214eaa73ddfc1d"),
+            PluginPackageResource("asset", "agent-workflow-typesafe/compatibility/v1", "agent_workflow_typesafe", "resources/compatibility.json", "089c8fddcc8bb76205bcff748b87d0fd6d21f2eab44578dbbd8795881fff5e03"),
         ),
         metadata={"authority": "advisory-only", "receipt_schema": "semantic-advice/v1alpha1"},
     )

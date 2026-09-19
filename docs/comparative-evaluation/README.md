@@ -1,26 +1,28 @@
-# TypeSafe Comparative Evaluation Layer for Agent-Workflow
+# Comparative Evaluation Ownership
 
-This is an **additional layer**. It does not modify or replace the existing TypeSafe plugin implementation pack or Agent-Workflow host-integration pack.
+Comparative evaluation is shared infrastructure, not TypeSafe-specific application authority.
 
-It supplies two new single-repository prompt packs:
+Canonical owner: `agent-workflow-comparative-eval` (`agent_workflow_comparative_eval`).
 
-- `agent-workflow-typesafe-eval-plugin-prompt-pack`: plugin-side measurement contracts, static labeled semantic corpora, and a candidate telemetry adapter.
-- `agent-workflow-typesafe-eval-host-prompt-pack`: static paired control-vs-candidate evaluation, normal-usage shadow capture, delayed outcome joins, and comparative reports.
+The shared library owns neutral schemas/models, legacy artifact upgrades, canonical hashing,
+pairing/cohort identity, reusable metrics/statistics, and frozen oracle datasets. This plugin
+owns TypeSafe/Jev projection, questions, SDK calls, semantic receipts, and candidate telemetry.
+Agent-Workflow owns control execution, shadow scheduling, lifecycle storage/outcome joins,
+review, and acceptance authority.
 
-## Core experiment model
+## Compatibility window
 
-For every TypeSafe-assisted feature, preserve the same input identity and record two arms:
+`agent_workflow_typesafe.evaluation` remains available during the 0.1.x series. With
+`agent-workflow-typesafe[eval]`, it delegates generic operations to the shared library while
+translating canonical observations back to the historical TypeSafe schema ID for old callers.
+The `neutral_observation` and `neutral_run_static_cases` helpers require the shared library and
+return canonical neutral artifacts.
 
-- **control**: the original Agent-Workflow implementation;
-- **candidate**: the TypeSafe-assisted implementation/advice.
+The packaged `resources/evaluation/*.json` corpora are retained byte-for-byte as compatibility
+copies until consumers have migrated. Their canonical future home is the shared library.
 
-During ordinary usage the control remains authoritative. TypeSafe is shadow-only and `candidate_applied=false` until a separately approved guarded experiment exists.
+## Privacy and authority
 
-Static controlled evidence and normal-usage shadow evidence remain separate cohorts.
-
-## Initial feature registry
-
-1. `routing-advice/v1`: compare original deterministic route with a counterfactual TypeSafe-assisted route passed through the **same deterministic Agent-Workflow policy**.
-2. `skill-behavior-eval/v1`: compare deterministic regex checks with semantic behavior judgment against independently labeled cases.
-
-Future TypeSafe features register the same control/candidate/oracle/metrics/capture contract.
+Comparative evidence never grants workflow authority. Shadow candidates remain unapplied unless
+an independently approved host policy changes that behavior. Raw task/skill text and API keys
+must not be persisted in comparative evidence.

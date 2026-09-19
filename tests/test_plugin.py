@@ -88,6 +88,8 @@ def test_doctor_reports_key_as_boolean(monkeypatch) -> None:
     assert result["api_key_configured"] is True
     assert "secret" not in json.dumps(result)
     assert compatibility()["typesafe_sdk"] == "==0.6.0"
+    assert compatibility()["comparative_evaluation"]["specifier"] == "==0.1.0"
+    assert result["comparative_evaluation"]["distribution"] == "agent-workflow-comparative-eval"
 
 
 def test_published_compatibility_matches_installed_resource() -> None:

@@ -11,6 +11,7 @@ import time
 from collections.abc import Mapping
 from typing import Any
 
+from .evaluation import shared_library_status
 from .service import advise_routing, evaluate_skill
 
 
@@ -38,4 +39,5 @@ def evaluate_candidate(
         "usage": {},
         "error_class": receipt.get("error") if receipt.get("status") == "service_failure" else None,
     }
+    result["comparative_eval"] = shared_library_status()
     return result

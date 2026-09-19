@@ -22,9 +22,10 @@ Agent-Workflow routing, executor or model policy, lifecycle, evaluation,
 review, or acceptance. Missing credentials, an unavailable SDK, uncertain
 answers, and service failures return distinct no-action outcomes.
 
-Install the base package for discovery, compatibility checks, receipts, and
-offline tests. Install `agent-workflow-typesafe[typesafe]` only to make live
-TypeSafe calls. `TYPESAFE_API_KEY` is read only by the optional live adapter;
+Install the base package for discovery, compatibility checks, and semantic
+receipts. Install `agent-workflow-typesafe[typesafe]` only to make live TypeSafe
+calls. Install `agent-workflow-typesafe[eval]` for the shared comparative-evaluation
+library, or `agent-workflow-typesafe[typesafe-eval]` for both optional capabilities. `TYPESAFE_API_KEY` is read only by the optional live adapter;
 it is never written to configuration, receipts, or logs.
 
 Enable it in Agent-Workflow configuration:
@@ -42,10 +43,16 @@ for host compatibility even though the public repository is named
 
 ## Comparative evaluation
 
-The plugin also ships an opt-in, secret-free comparative-evaluation layer. It records
-control and TypeSafe candidate observations, keeps control authoritative, supports
-deterministic repeated static cases, and exposes bounded timing/usage metadata for
-shadow capture. Frozen corpora and versioned observation/outcome/report contracts are
-documented in [docs/comparative-evaluation](docs/comparative-evaluation/README.md).
-Live calls remain opt-in; evaluation helpers do not persist raw task text, API keys,
-or host lifecycle state.
+Comparative evaluation is now split across a dependency-neutral shared library and
+this provider-specific plugin. `agent-workflow-comparative-eval` owns canonical
+comparison contracts, datasets, pairing/metrics/statistics, and neutral evidence.
+This plugin retains TypeSafe/Jev execution and candidate telemetry only.
+
+For the 0.1.x migration window, `agent_workflow_typesafe.evaluation` remains as a
+compatibility facade. With the `[eval]` extra installed it delegates generic work to
+the shared library; without that extra it uses the frozen 0.1.0 implementation so
+base plugin installs do not acquire a new required dependency. Existing
+`agent-workflow-typesafe/.../v1` observation artifacts remain readable; new
+integrations should use the neutral shared-library schema namespace.
+
+See [docs/comparative-evaluation/README.md](docs/comparative-evaluation/README.md).
