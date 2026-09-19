@@ -129,7 +129,7 @@ def plugin() -> PluginDescriptor:
         resources=("agent-workflow-typesafe://compatibility/v1", "agent-workflow-typesafe://semantic-advice/v1alpha1"),
         package_resources=(
             PluginPackageResource("schema", "agent-workflow-typesafe/semantic-advice/v1alpha1", "agent_workflow_typesafe", "resources/semantic-advice-v1alpha1.schema.json", "d5552fab3f2cf759fe9dab5f4079d5a048600cff67ff5ca6399b1e45c6ef48b2"),
-            PluginPackageResource("asset", "agent-workflow-typesafe/compatibility/v1", "agent_workflow_typesafe", "resources/compatibility.json", "da5134bc49ef7e323a6a10f1d211af0ee48deb299f8f5f2facc315152e5f5c67"),
+            PluginPackageResource("asset", "agent-workflow-typesafe/compatibility/v1", "agent_workflow_typesafe", "resources/compatibility.json", "576b88ee622296d093b95289e13e0fbbcd0d250b48faa3e25d002f040c6efced"),
         ),
         decision_providers=(PluginDecisionProvider(
             "typesafe",
