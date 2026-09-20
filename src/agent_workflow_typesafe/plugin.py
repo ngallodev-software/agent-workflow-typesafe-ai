@@ -136,7 +136,7 @@ def plugin() -> PluginDescriptor:
         ),
         decision_providers=(PluginDecisionProvider(
             "typesafe",
-            tuple((*_ROUTING_IDS.keys(), *_SKILL_IDS.keys())),
+            tuple(_ROUTING_IDS.keys()),
             _decision_provider,
         ),),
         decision_modes=(

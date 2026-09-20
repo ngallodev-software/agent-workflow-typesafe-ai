@@ -107,7 +107,11 @@ def test_plugin_advertises_dynamic_decision_modes_and_provider() -> None:
     provider = descriptor.decision_providers[0]
     assert provider.name == "typesafe"
     assert "routing.task_class" in provider.decisions
-    assert "skill.behavior_satisfied" in provider.decisions
+    assert set(provider.decisions) == {
+        "routing.task_class",
+        "routing.interaction_required",
+        "routing.semantic_risk",
+    }
 
 
 def test_comparative_mode_requests_host_comparison_capture() -> None:

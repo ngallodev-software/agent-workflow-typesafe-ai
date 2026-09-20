@@ -20,10 +20,7 @@
     "decisions": [
       "routing.task_class",
       "routing.interaction_required",
-      "routing.semantic_risk",
-      "skill.behavior_satisfied",
-      "skill.completeness",
-      "skill.actionability"
+      "routing.semantic_risk"
     ],
     "modes": {
       "comparative": "shadow",
