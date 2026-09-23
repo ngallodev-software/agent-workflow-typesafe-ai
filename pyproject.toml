@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agent-workflow-typesafe"
+version = "0.1.2"
+description = "Advisory TypeSafe semantic evidence plugin for Agent-Workflow"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+authors = [{name = "ngallodev-software"}]
+classifiers = ["Programming Language :: Python :: 3 :: Only"]
+
+[project.optional-dependencies]
+typesafe = ["typesafe-sdk==0.6.0"]
+eval = ["agent-workflow-comparative-eval==0.1.0"]
+typesafe-eval = ["typesafe-sdk==0.6.0", "agent-workflow-comparative-eval==0.1.0"]
+test = ["pytest>=8"]
+
+[project.entry-points."agent_workflow.plugins"]
+agent-workflow-typesafe = "agent_workflow_typesafe.plugin:plugin"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+agent_workflow_typesafe = ["resources/*.json", "resources/evaluation/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
