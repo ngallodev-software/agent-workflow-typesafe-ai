@@ -1,0 +1,97 @@
+Metadata-Version: 2.4
+Name: agent-workflow-typesafe
+Version: 0.1.2
+Summary: Advisory TypeSafe semantic evidence plugin for Agent-Workflow
+Author: ngallodev-software
+License-Expression: Apache-2.0
+Classifier: Programming Language :: Python :: 3 :: Only
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Provides-Extra: typesafe
+Requires-Dist: typesafe-sdk==0.6.0; extra == "typesafe"
+Provides-Extra: eval
+Requires-Dist: agent-workflow-comparative-eval==0.1.0; extra == "eval"
+Provides-Extra: typesafe-eval
+Requires-Dist: typesafe-sdk==0.6.0; extra == "typesafe-eval"
+Requires-Dist: agent-workflow-comparative-eval==0.1.0; extra == "typesafe-eval"
+Provides-Extra: test
+Requires-Dist: pytest>=8; extra == "test"
+Dynamic: license-file
+
+# Agent-Workflow TypeSafe AI
+
+`agent-workflow-typesafe` is an external Agent-Workflow plugin that makes
+optional [TypeSafe AI](https://typesafe.ai/) API calls through its Jev/System
+One typed-decision API. It augments bounded decisions with Choice, Noul, and
+Score evidence while Agent-Workflow retains deterministic authority.
+
+## What it does
+
+- Projects bounded, redacted task or skill evidence into TypeSafe AI questions.
+- Calls the optional TypeSafe AI/Jev API and normalizes typed answers into
+  versioned, secret-free semantic receipts.
+- Provides advisory routing metadata: task class, interaction need, and
+  semantic consequence/risk.
+- Evaluates whether a skill directs a required behavior, plus independent
+  completeness and actionability evidence.
+- Reports compatibility and credential-free diagnostics through
+  `agent-workflow typesafe compatibility` and `doctor`.
+
+All outputs are advisory `no_action` evidence. The plugin never changes
+Agent-Workflow routing, executor or model policy, lifecycle, evaluation,
+review, or acceptance. Missing credentials, an unavailable SDK, uncertain
+answers, and service failures return distinct no-action outcomes.
+
+Install the base package for discovery, compatibility checks, and semantic
+receipts. Install `agent-workflow-typesafe[typesafe]` only to make live TypeSafe
+calls. Install `agent-workflow-typesafe[eval]` for the shared comparative-evaluation
+library, or `agent-workflow-typesafe[typesafe-eval]` for both optional capabilities. `TYPESAFE_API_KEY` is read only by the optional live adapter;
+it is never written to configuration, receipts, or logs.
+
+Enable it in Agent-Workflow configuration:
+
+```toml
+[plugins]
+enabled = ["agent-workflow-typesafe"]
+```
+
+Then use `agent-workflow typesafe compatibility`, `doctor`, `advise-routing`,
+or `evaluate-skill`. Live calls require both the optional extra and the normal
+runtime environment key. The distribution and entry-point names remain stable
+for host compatibility even though the public repository is named
+`agent-workflow-typesafe-ai`.
+
+## TypeSafe API call logging
+
+API call logging is disabled by default. To opt in, set `TYPESAFE_API_CALL_LOG`
+to a JSONL file path. Each attempted TypeSafe call records the bounded projected
+input, question set, normalized output (or exception class), request hash, model,
+status, and duration. Secrets and authorization-like fields are redacted, and
+logger I/O failures never affect the advisory result. Treat the file as sensitive
+because projected task and skill text may be retained.
+
+## Comparative evaluation
+
+Comparative evaluation is now split across a dependency-neutral shared library and
+this provider-specific plugin. `agent-workflow-comparative-eval` owns canonical
+comparison contracts, datasets, pairing/metrics/statistics, and neutral evidence.
+This plugin retains TypeSafe/Jev execution and candidate telemetry only.
+
+For the 0.1.x migration window, `agent_workflow_typesafe.evaluation` remains as a
+compatibility facade. With the `[eval]` extra installed it delegates generic work to
+the shared library; without that extra it uses the frozen 0.1.0 implementation so
+base plugin installs do not acquire a new required dependency. Existing
+`agent-workflow-typesafe/.../v1` observation artifacts remain readable; new
+integrations should use the neutral shared-library schema namespace.
+
+See [docs/comparative-evaluation/README.md](docs/comparative-evaluation/README.md).
+
+## Agent-Workflow decision modes
+
+On an Agent-Workflow host that supports dynamic decision providers, this plugin advertises two modes:
+
+- `typesafe` — TypeSafe semantic evidence is eligible for bounded Agent-Workflow policy consumption on approved decision seams;
+- `comparative` — the same TypeSafe evidence is evaluated in shadow mode while deterministic control remains authoritative.
+
+The plugin does not own thresholds, fallback, routing authority, lifecycle, review, or acceptance. Those remain Agent-Workflow policy. Use `agent-workflow decision modes` to inspect the modes actually available from enabled plugins.

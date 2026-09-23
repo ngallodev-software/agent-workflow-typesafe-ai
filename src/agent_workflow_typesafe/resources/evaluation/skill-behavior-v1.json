@@ -1,0 +1,10 @@
+{
+  "dataset_version": "skill-behavior-v1.0.0",
+  "feature_id": "skill-behavior-eval/v1",
+  "cases": [
+    {"case_id": "skill-exact", "scenario_id": "S1", "requirement": "acknowledge the durable message", "skill_text": "Acknowledge the durable message using its correlation ID.", "oracle": {"behavior_satisfied": true}},
+    {"case_id": "skill-keyword-wrong", "scenario_id": "S2", "requirement": "acknowledge the durable message", "skill_text": "Messages are important.", "oracle": {"behavior_satisfied": false}},
+    {"case_id": "skill-prohibition", "scenario_id": "S3", "requirement": "never store API keys", "skill_text": "Do not store credentials in receipts or logs.", "oracle": {"behavior_satisfied": true}},
+    {"case_id": "skill-missing", "scenario_id": "S4", "requirement": "use the existing authority path on uncertainty", "skill_text": "Use semantic answers whenever available.", "oracle": {"behavior_satisfied": false}}
+  ]
+}

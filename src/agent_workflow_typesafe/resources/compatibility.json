@@ -1,0 +1,43 @@
+{
+  "agent_workflow": {
+    "plugin_api": 1,
+    "verified_products": [
+      "0.10.0",
+      "0.10.1",
+      "0.10.2"
+    ]
+  },
+  "comparative_evaluation": {
+    "canonical_observation_schema": "agent-workflow-comparative-eval/comparison-observation/v1",
+    "legacy_observation_schema": "agent-workflow-typesafe/comparison-observation/v1",
+    "legacy_resources": "compatibility-only",
+    "library": "agent-workflow-comparative-eval",
+    "mode": "optional-extra",
+    "specifier": "==0.1.0"
+  },
+  "decision_integration": {
+    "decisions": [
+      "routing.task_class",
+      "routing.interaction_required",
+      "routing.semantic_risk",
+      "skill.behavior_satisfied",
+      "skill.completeness",
+      "skill.actionability"
+    ],
+    "modes": {
+      "comparative": "shadow",
+      "typesafe": "automated"
+    },
+    "policy_owner": "agent-workflow",
+    "provider": "typesafe"
+  },
+  "plugin_version": "0.1.2",
+  "python": ">=3.11",
+  "question_sets": {
+    "routing": "routing/v1alpha1",
+    "skill_evaluation": "skill-evaluation/v1alpha1"
+  },
+  "receipt_schema": "semantic-advice/v1alpha1",
+  "schema": "agent-workflow-typesafe/compatibility/v1",
+  "typesafe_sdk": "==0.6.0"
+}
