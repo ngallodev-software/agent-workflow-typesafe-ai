@@ -1,9 +1,20 @@
 # Agent-Workflow TypeSafe AI
 
-`agent-workflow-typesafe` is an external Agent-Workflow plugin that makes
-optional [TypeSafe AI](https://typesafe.ai/) API calls through its Jev/System
-One typed-decision API. It augments bounded decisions with Choice, Noul, and
-Score evidence while Agent-Workflow retains deterministic authority.
+![Version](https://img.shields.io/badge/version-0.1.2-blue)
+![Status](https://img.shields.io/badge/status-compatibility%20adapter-orange)
+![License](https://img.shields.io/badge/license-Apache--2.0-green)
+
+`agent-workflow-typesafe` is the standalone TypeSafe AI/Jev evidence adapter
+originally built for Agent-Workflow's external plugin boundary. It augments
+bounded semantic decisions with `Choice`, `Noul`, and `Score` evidence while
+the host retains deterministic policy and lifecycle authority.
+
+> **Current status:** version 0.1.2 declares compatibility with Agent-Workflow
+> 0.10.0–0.10.2. Agent-Workflow 0.11.9 now includes its own optional TypeSafe
+> routing provider, and the current benchmark harness uses that built-in provider.
+> Keep this package for the standalone adapter/skill-evaluation surface or for
+> hosts that match its published compatibility contract; do not infer 0.11.x
+> compatibility from the repository being active.
 
 ## What it does
 
@@ -100,8 +111,9 @@ consume only registered decisions through its own policy; this package does not
 set thresholds or decide what evidence changes an application outcome. In version
 0.1.2, `typesafe` advertises host-policy consumption and `comparative` advertises
 shadow evidence capture. Compatibility metadata verifies Agent-Workflow 0.10.0,
-0.10.1, and 0.10.2; operators should check the published compatibility contract
-before enabling that plugin against another host version.
+0.10.1, and 0.10.2. That is an explicit package boundary, not a claim of current
+0.11.x compatibility; operators should check the published compatibility contract
+before enabling the plugin against another host version.
 
 ```mermaid
 flowchart LR
