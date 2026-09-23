@@ -26,3 +26,36 @@ copies until consumers have migrated. Their canonical future home is the shared 
 Comparative evidence never grants workflow authority. Shadow candidates remain unapplied unless
 an independently approved host policy changes that behavior. Raw task/skill text and API keys
 must not be persisted in comparative evidence.
+
+## How this relates to the TypeSafe plugin and benchmark repositories
+
+This repository's `agent-workflow-typesafe` package is the optional external
+provider adapter: it owns TypeSafe/Jev projection, typed question sets, SDK calls,
+semantic receipts, and provider-specific call telemetry. The current Agent-Workflow
+integration has a built-in TypeSafe provider; its source lives in the host, and
+current benchmark runs use that provider rather than installing this external
+package. The standalone package and its verified-host list remain a separate
+compatibility surface. See the [plugin integration overview](../../README.md#how-the-integration-expanded-across-repositories)
+and the [Agent-Workflow provider description](https://github.com/ngallodev-software/agent-workflow#optional-bounded-semantic-decisions).
+
+The benchmark plugin adds controlled qualification, advisory source review, and
+post-seal TypeSafe scoring probes around the host integration. This library does
+not make those calls or own benchmark execution; it makes their comparison records
+neutral and reproducible. Published BM3–BM5 summaries report three successful
+pre-treatment routing qualification calls per study, with the calls excluded from
+paired treatments. BM4's separate seven-file advisory review used seven requests
+and 38,295 input tokens; neither result changes machine-score or eligibility
+authority. See the [benchmark plugin README](https://github.com/ngallodev-software/agent-workflow-benchmark)
+and the [public result summaries](https://github.com/ngallodev-software/agent-workflow-benchmark-results).
+
+```mermaid
+flowchart LR
+    A[Agent-Workflow TypeSafe provider] --> B[Semantic evidence and provider telemetry]
+    B --> C[agent-workflow-comparative-eval]
+    C --> D[Neutral observations, cohorts, metrics, statistics]
+    E[Benchmark plugin] --> A
+    E --> C
+    E --> F[Sealed execution and scoring evidence]
+    F --> G[Public benchmark result]
+    D --> G
+```
