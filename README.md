@@ -193,6 +193,23 @@ pages contain full metrics and limitations: [BM3](https://github.com/ngallodev-s
 [BM4](https://github.com/ngallodev-software/agent-workflow-benchmark-results/tree/main/bm4),
 and [BM5](https://github.com/ngallodev-software/agent-workflow-benchmark-results/tree/main/bm5).
 
+
+## Independent ecosystem references
+
+This adapter has started appearing in independent Jev ecosystem catalogs and
+architecture surveys. These are third-party references, not claims of adoption,
+endorsement, or compatibility beyond this repository's published contracts.
+
+- [Augustus ecosystem notes](https://github.com/24601/Augustus/blob/main/docs/ecosystem.md)
+  describe the project as an advisory sidecar whose receipts do not take over
+  host routing.
+- [Jev Users](https://jevusers.com/apps) includes the repository in its
+  community-aggregated Jev application index.
+
+Those references are useful external discovery signals, but the source,
+compatibility metadata, tests, and published benchmark evidence in the
+ngallodev-software repositories remain the authority for what this adapter does.
+
 Official background: [Jev and System One](https://typesafe.ai/blog/introducing-system-one-models-and-jev),
 [System One](https://docs.typesafe.ai/concepts/system-one.md),
 [state](https://docs.typesafe.ai/concepts/state.md),
