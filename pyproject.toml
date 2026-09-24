@@ -14,8 +14,11 @@ keywords = ["agent-workflow", "agentic-ai", "typesafe-ai", "jev", "system-one", 
 classifiers = ["Programming Language :: Python :: 3 :: Only"]
 
 [project.urls]
+Homepage = "https://ngallodev-software.uk/projects/agent-workflow-typesafe-ai"
 Repository = "https://github.com/ngallodev-software/agent-workflow-typesafe-ai"
 AgentWorkflow = "https://github.com/ngallodev-software/agent-workflow"
+ImplementationSkill = "https://github.com/ngallodev-software/typesafe-ai-implementation-skill"
+BenchmarkResults = "https://github.com/ngallodev-software/agent-workflow-benchmark-results"
 
 [project.optional-dependencies]
 typesafe = ["typesafe-sdk==0.6.0"]
