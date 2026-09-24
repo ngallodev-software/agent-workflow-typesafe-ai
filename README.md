@@ -7,6 +7,13 @@
 **Portfolio case study:** https://ngallodev-software.uk/projects/agent-workflow-typesafe-ai  
 **Implementation skill:** https://github.com/ngallodev-software/typesafe-ai-implementation-skill
 
+## Quick summary
+
+- **What it is:** a standalone TypeSafe AI/Jev compatibility adapter that turns bounded task/skill evidence into typed `Choice`, `Noul`, and `Score` receipts.
+- **Why it matters:** semantic judgment can be added without handing workflow authority to a model.
+- **Key boundary:** Agent-Workflow or another host still owns thresholds, routing, execution, review, and acceptance; this adapter returns advisory evidence and explicit fallbacks.
+- **Current status:** Agent-Workflow 0.11.x has a built-in TypeSafe provider; this repository remains the standalone compatibility/evaluation surface with its own published compatibility range.
+
 `agent-workflow-typesafe` is the standalone TypeSafe AI/Jev evidence adapter
 originally built for Agent-Workflow's external plugin boundary. It augments
 bounded semantic decisions with `Choice`, `Noul`, and `Score` evidence while
