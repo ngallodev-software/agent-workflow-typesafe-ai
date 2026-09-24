@@ -4,6 +4,9 @@
 ![Status](https://img.shields.io/badge/status-compatibility%20adapter-orange)
 ![License](https://img.shields.io/badge/license-Apache--2.0-green)
 
+**Portfolio case study:** https://ngallodev-software.uk/projects/agent-workflow-typesafe-ai  
+**Implementation skill:** https://github.com/ngallodev-software/typesafe-ai-implementation-skill
+
 `agent-workflow-typesafe` is the standalone TypeSafe AI/Jev evidence adapter
 originally built for Agent-Workflow's external plugin boundary. It augments
 bounded semantic decisions with `Choice`, `Noul`, and `Score` evidence while
