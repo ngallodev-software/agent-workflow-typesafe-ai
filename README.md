@@ -20,7 +20,7 @@ bounded semantic decisions with `Choice`, `Noul`, and `Score` evidence while
 the host retains deterministic policy and lifecycle authority.
 
 > **Current status:** version 0.1.2 declares compatibility with Agent-Workflow
-> 0.10.0–0.10.2. Agent-Workflow 0.11.9 now includes its own optional TypeSafe
+> 0.10.0–0.10.2. Agent-Workflow 0.11.x includes its own optional TypeSafe
 > routing provider, and the current benchmark harness uses that built-in provider.
 > Keep this package for the standalone adapter/skill-evaluation surface or for
 > hosts that match its published compatibility contract; do not infer 0.11.x
