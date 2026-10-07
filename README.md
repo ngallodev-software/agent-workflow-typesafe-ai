@@ -27,7 +27,7 @@
 - **What it is:** a standalone TypeSafe AI/Jev compatibility adapter that turns bounded task/skill evidence into typed `Choice`, `Noul`, and `Score` receipts.
 - **Why it matters:** semantic judgment can be added without handing workflow authority to a model.
 - **Key boundary:** Agent-Workflow or another host still owns thresholds, routing, execution, review, and acceptance; this adapter returns advisory evidence and explicit fallbacks.
-- **Current status:** Agent-Workflow 0.11.x has a built-in TypeSafe provider; this repository remains the standalone compatibility/evaluation surface with its own published compatibility range.
+- **Current status:** Current Agent-Workflow includes a built-in TypeSafe provider; this repository remains the standalone compatibility/evaluation surface with its own published compatibility range.
 
 `agent-workflow-typesafe` is the standalone TypeSafe AI/Jev evidence adapter
 originally built for Agent-Workflow's external plugin boundary. It augments
@@ -35,10 +35,10 @@ bounded semantic decisions with `Choice`, `Noul`, and `Score` evidence while
 the host retains deterministic policy and lifecycle authority.
 
 > **Current status:** version 0.1.2 declares compatibility with Agent-Workflow
-> 0.10.0–0.10.2. Agent-Workflow 0.11.x includes its own optional TypeSafe
-> routing provider, and the current benchmark harness uses that built-in provider.
+> 0.10.0–0.10.2. Agent-Workflow 0.11+ includes its own optional TypeSafe
+> routing provider, and the current 0.12.x benchmark stack uses that built-in provider.
 > Keep this package for the standalone adapter/skill-evaluation surface or for
-> hosts that match its published compatibility contract; do not infer 0.11.x
+> hosts that match its published compatibility contract; do not infer current-core
 > compatibility from the repository being active.
 
 ## What it does
@@ -136,8 +136,8 @@ consume only registered decisions through its own policy; this package does not
 set thresholds or decide what evidence changes an application outcome. In version
 0.1.2, `typesafe` advertises host-policy consumption and `comparative` advertises
 shadow evidence capture. Compatibility metadata verifies Agent-Workflow 0.10.0,
-0.10.1, and 0.10.2. That is an explicit package boundary, not a claim of current
-0.11.x compatibility; operators should check the published compatibility contract
+0.10.1, and 0.10.2. That is an explicit package boundary, not a claim of current-core
+compatibility; operators should check the published compatibility contract
 before enabling the plugin against another host version.
 
 ```mermaid
@@ -230,6 +230,9 @@ endorsement, or compatibility beyond this repository's published contracts.
   host routing.
 - [Jev Users](https://jevusers.com/apps) includes the repository in its
   community-aggregated Jev application index.
+- [JevHunt](https://jevhunt.com/projects/ngallodev-software/agent-workflow-typesafe-ai/)
+  indexes the repository as a documented Jev integration and explicitly notes that it
+  has not independently executed or benchmarked the project.
 
 Those references are useful external discovery signals, but the source,
 compatibility metadata, tests, and published benchmark evidence in the
