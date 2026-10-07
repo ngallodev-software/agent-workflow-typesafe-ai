@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "agent-workflow-typesafe"
 version = "0.1.2"
-description = "Advisory TypeSafe semantic evidence plugin for Agent-Workflow"
+description = "Standalone TypeSafe AI/Jev semantic-evidence adapter for bounded Agent-Workflow decisions, explicit uncertainty, and compatibility evaluation."
 readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
@@ -15,6 +15,8 @@ classifiers = ["Programming Language :: Python :: 3 :: Only"]
 
 [project.urls]
 Homepage = "https://ngallodev-software.uk/projects/agent-workflow-typesafe-ai"
+Portfolio = "https://ngallodev-software.uk/"
+JevHunt = "https://jevhunt.com/projects/ngallodev-software/agent-workflow-typesafe-ai/"
 Repository = "https://github.com/ngallodev-software/agent-workflow-typesafe-ai"
 AgentWorkflow = "https://github.com/ngallodev-software/agent-workflow"
 ImplementationSkill = "https://github.com/ngallodev-software/typesafe-ai-implementation-skill"
