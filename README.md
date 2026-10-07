@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://ngallodev-software.uk/" title="Nate G. / ngallodev-software portfolio">
-    <img src="https://raw.githubusercontent.com/ngallodev-software/portfolio-site/master/public/icon-husky-r1-192.png" width="88" alt="Nate G. portfolio husky mark">
+    <img src="https://ngallodev-software.uk/icon-husky-r1-192.png" width="88" alt="Nate G. portfolio husky mark">
   </a>
 </p>
 
