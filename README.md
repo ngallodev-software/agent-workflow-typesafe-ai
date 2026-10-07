@@ -1,13 +1,28 @@
-# Agent-Workflow TypeSafe AI
+<p align="center">
+  <a href="https://ngallodev-software.uk/" title="Nate G. / ngallodev-software portfolio">
+    <img src="https://raw.githubusercontent.com/ngallodev-software/portfolio-site/master/public/icon-husky-r1-192.png" width="88" alt="Nate G. portfolio husky mark">
+  </a>
+</p>
 
-![Version](https://img.shields.io/badge/version-0.1.2-blue)
-![Status](https://img.shields.io/badge/status-compatibility%20adapter-orange)
-![License](https://img.shields.io/badge/license-Apache--2.0-green)
+<h1 align="center">Agent-Workflow TypeSafe AI</h1>
 
-**Portfolio case study:** https://ngallodev-software.uk/projects/agent-workflow-typesafe-ai  
-**Implementation skill:** https://github.com/ngallodev-software/typesafe-ai-implementation-skill
+<p align="center"><strong>Standalone TypeSafe AI/Jev semantic-evidence adapter for bounded decisions, explicit uncertainty, and host-owned policy.</strong></p>
+
+<p align="center">
+  <a href="https://ngallodev-software.uk/projects/agent-workflow-typesafe-ai">Portfolio case study</a> ·
+  <a href="https://jevhunt.com/projects/ngallodev-software/agent-workflow-typesafe-ai/">JevHunt listing</a> ·
+  <a href="https://github.com/ngallodev-software/typesafe-ai-implementation-skill">Implementation skill</a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/version-0.1.2-blue" alt="">
+  <img src="https://img.shields.io/badge/status-compatibility%20adapter-orange" alt="">
+  <img src="https://img.shields.io/badge/license-Apache--2.0-green" alt="">
+</p>
 
 ## Summary
+
+> **Evidence & chronology:** this repository is part of the wider Agent-Workflow engineering ecosystem. A private `agent-workflow-lab-notebook` preserves dated decisions, failures, corrections, and evidence lineage; public README and portfolio claims are curated from public artifacts and reviewed notebook history. JevHunt is an independent discovery/indexing surface, not an endorsement or independent validation.
 
 - **What it is:** a standalone TypeSafe AI/Jev compatibility adapter that turns bounded task/skill evidence into typed `Choice`, `Noul`, and `Score` receipts.
 - **Why it matters:** semantic judgment can be added without handing workflow authority to a model.
