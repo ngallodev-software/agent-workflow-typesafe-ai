@@ -22,7 +22,7 @@
 
 ## Summary
 
-> **Evidence & chronology:** this repository is part of the wider Agent-Workflow engineering ecosystem. A private `agent-workflow-lab-notebook` preserves dated decisions, failures, corrections, and evidence lineage; public README and portfolio claims are curated from public artifacts and reviewed notebook history. JevHunt is an independent discovery/indexing surface, not an endorsement or independent validation.
+> **Evidence & chronology:** this repository is part of the wider Agent-Workflow engineering ecosystem. Public README and portfolio claims are curated from public artifacts and reviewed against a private lab notebook of dated decisions and corrections. JevHunt is an independent discovery/indexing surface, not an endorsement or independent validation.
 
 - **What it is:** a standalone TypeSafe AI/Jev compatibility adapter that turns bounded task/skill evidence into typed `Choice`, `Noul`, and `Score` receipts.
 - **Why it matters:** semantic judgment can be added without handing workflow authority to a model.
